@@ -1,2 +1,23 @@
 /node_modules
 /image-slider-app/node_modules
+
+# dependencies
+/image-slider-app/.pnp
+/image-slider-app/.pnp.js
+
+# testing
+/image-slider-app/coverage
+
+# production
+/image-slider-app/build
+
+# misc
+/image-slider-app/.DS_Store
+/image-slider-app/.env.local
+/image-slider-app/.env.development.local
+/image-slider-app/.env.test.local
+/image-slider-app/.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
