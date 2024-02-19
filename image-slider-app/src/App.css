@@ -1,0 +1,75 @@
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+.App-header h2 {
+  color: #ffffff; /* Change the color to fit your design */
+  text-align: center;
+}
+
+.App-header img {
+  max-width: calc(100% - 800px);
+  width: auto;
+  height: auto; /* Adjust height automatically */
+  object-fit: contain; /* Change to contain to see the whole image */
+  margin-top: 10px; /* New */
+  margin-bottom: 10px; /* New */
+  margin-left: auto; /* Ensuring center alignment */
+  margin-right: auto; /* Ensuring center alignment */
+}
+
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; /* Adjust the gap between controls as needed */
+}
+
+.fade-in {
+  animation: fadeInAnimation ease 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+button {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@media (max-width: 768px) {
+  .App-header h2 {
+    font-size: calc(8px + 4vmin); /* Smaller screens might need a different scaling */
+  }
+}
+
+@media (max-width: 768px) {
+  .App-header img {
+    max-width: 100%;
+    width: auto; /* Adjust to ensure it scales down on small screens */
+  }
+}
