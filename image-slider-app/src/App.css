@@ -1,36 +1,67 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  background-color: #282c34; /* Dark background for the entire page */
+  color: #ffffff; /* Light text for contrast */
+}
+
+.App {
+  text-align: center;
+  /* Ensure any additional background is also set to a dark color if needed */
+  background-color: #282c34; /* Match the body's background */
+}
+
 .App-header {
-  background-color: #282c34;
+  background-color: #282c34; /* Dark background */
+  color: #ffffff; /* Light text */
+  padding-top: 10px; /* Reduced from a larger value to reduce space at the top */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
+  justify-content: flex-start; /* Align items from the start to reduce gaps */
 }
 
 .App-header h2 {
   color: #ffffff; /* Change the color to fit your design */
   text-align: center;
+  margin-bottom: 10px; /* Reduce this value as needed */
 }
 
 .App-header img {
-  max-width: calc(100% - 800px);
+  max-width: 120vh; /* Example to limit image height and ensure fit */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: contain; /* Ensure the full image is visible without distortion */
+}
+
+.image-counter {
+  /* Smaller text and less margin for the image counter */
+  font-size: 0.8rem; /* Makes the text smaller */
+  margin-bottom: 5px;
+}
+
+.image-wrapper {
+  width: 100%; /* This ensures the wrapper extends full width */
+  display: flex; /* Use flex to center the image and control spacing */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically if needed */
+  margin-bottom: 15px;
+}
+
+.lazy-load {
+  min-height: auto; /* Adjust or remove if causing too much space */
   width: auto;
-  height: auto; /* Adjust height automatically */
-  object-fit: contain; /* Change to contain to see the whole image */
-  margin-top: 10px; /* New */
-  margin-bottom: 10px; /* New */
-  margin-left: auto; /* Ensuring center alignment */
-  margin-right: auto; /* Ensuring center alignment */
+  display: block;
+  margin: 0 auto; /* Keeps the image centered */
+  margin-top: 5px;
 }
 
 .carousel-controls {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px; /* Adjust the gap between controls as needed */
+  gap: 15px; /* Adjust the gap between controls as needed */
 }
 
 .fade-in {

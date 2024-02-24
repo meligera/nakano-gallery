@@ -22,30 +22,33 @@ function App() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting) {
-          const lazyImage = entry.target;
-          lazyImage.src = lazyImage.dataset.src;
-          observer.unobserve(lazyImage);
-        }
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const lazyImage = entry.target;
+            lazyImage.src = lazyImage.dataset.src;
+            lazyImage.classList.remove('lazy-load'); // Optionally remove the lazy load class
+            observer.unobserve(lazyImage);
+          }
+        });
       },
       {
         rootMargin: '0px',
         threshold: 0.01,
       }
     );
-
-    if (imageRef.current) {
-      observer.observe(imageRef.current);
+  
+    const currentImage = imageRef.current;
+    if (currentImage) {
+      observer.observe(currentImage);
     }
-
+  
     return () => {
-      if (imageRef.current) {
-        observer.unobserve(imageRef.current);
+      if (currentImage) {
+        observer.unobserve(currentImage);
       }
     };
   }, [currentIndex, images]);
-
+ 
   // Function to navigate to the next image
   const nextImage = () => {
     setCurrentIndex((currentIndex + 1) % images.length);
@@ -60,6 +63,27 @@ function App() {
   const randomImage = () => {
     setCurrentIndex(Math.floor(Math.random() * images.length));
   };
+
+  const downloadCurrentImage = () => {
+    const imageSrc = `http://62.109.18.217:5000${images[currentIndex]}`;
+    fetch(imageSrc)
+      .then(response => response.blob())
+      .then(blob => {
+        const blobUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = `${currentIndex + 1}.jpg`; // Customize the filename here
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => {
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(blobUrl);
+        }, 100);
+      })
+      .catch(err => console.error("Error in downloading the file", err));
+  };
+  
+  
 
   useEffect(() => {
     function handleKeyPress(e) {
@@ -83,25 +107,28 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h2>Quintessential Quintuplets Gallery</h2>
-        <span>
+        <span className='image-counter'>
           Image {currentIndex + 1} of {images.length}
         </span>
         {images.length > 0 && (
+        <div className="image-wrapper">
           <img 
             ref={imageRef}
             data-src={`http://62.109.18.217:5000${images[currentIndex]}`} 
-            alt="Carousel"
+            alt="Girls"
             onLoad={onLoad}
             className={`lazy-load ${!isLoading ? 'fade-in' : ''}`}
             key={currentIndex}
             style={{ opacity: isLoading ? 0 : 1 }}
           />
-        )}
+        </div>
+      )}
         <div className="carousel-controls">
           <button onClick={prevImage}>Previous</button>
           <button onClick={randomImage}>Random</button>
           <button onClick={nextImage}>Next </button>
         </div>
+        <button onClick={downloadCurrentImage} style={{ marginTop: '10px' }}>Download Current Image</button>
       </header>
     </div>
   );
