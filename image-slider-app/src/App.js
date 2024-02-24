@@ -10,7 +10,7 @@ function App() {
 
   // Fetch the list of images from the server
   useEffect(() => {
-    axios.get('http://192.168.88.119:5000/images/list')
+    axios.get('http://62.109.18.217:5000/images/list')
       .then(response => {
         setImages(response.data);
         // Initialize with a random image
@@ -89,7 +89,7 @@ function App() {
         {images.length > 0 && (
           <img 
             ref={imageRef}
-            data-src={`http://192.168.88.119:5000${images[currentIndex]}`} 
+            data-src={`http://62.109.18.217:5000${images[currentIndex]}`} 
             alt="Carousel"
             onLoad={onLoad}
             className={`lazy-load ${!isLoading ? 'fade-in' : ''}`}
