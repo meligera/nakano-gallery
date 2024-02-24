@@ -117,9 +117,9 @@ function App() {
             data-src={`http://62.109.18.217:5000${images[currentIndex]}`} 
             alt="Girls"
             onLoad={onLoad}
-            className={`lazy-load ${!isLoading ? 'fade-in' : ''}`}
+            className={`lazy-load ${isLoading ? 'image-loading' : 'fade-in'}`}
             key={currentIndex}
-            style={{ opacity: isLoading ? 0 : 1 }}
+            style={{ opacity: isLoading ? 0 : 1 }} // Adjust the initial opacity if needed
           />
         </div>
       )}
