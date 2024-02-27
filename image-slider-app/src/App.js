@@ -49,6 +49,10 @@ function App() {
     };
   }, [currentIndex, images]);
  
+  useEffect(() => {
+    setIsLoading(true); // Reset loading state on currentIndex change
+  }, [currentIndex]);
+
   // Function to navigate to the next image
   const nextImage = () => {
     setCurrentIndex((currentIndex + 1) % images.length);
@@ -82,8 +86,6 @@ function App() {
       })
       .catch(err => console.error("Error in downloading the file", err));
   };
-  
-  
 
   useEffect(() => {
     function handleKeyPress(e) {
@@ -100,7 +102,7 @@ function App() {
   }, [nextImage, prevImage, randomImage]); // Include randomImage in the dependency array
   
     const onLoad = () => {
-    setIsLoading(false); // Set loading to false when the image is loaded
+    setTimeout(() => setIsLoading(false), 250); // Adjust the delay here as needed
   };
 
   return (
@@ -114,12 +116,12 @@ function App() {
         <div className="image-wrapper">
           <img 
             ref={imageRef}
+            src={isLoading ? undefined : `http://62.109.18.217:5000${images[currentIndex]}`} 
             data-src={`http://62.109.18.217:5000${images[currentIndex]}`} 
             alt="Girls"
             onLoad={onLoad}
-            className={`lazy-load ${isLoading ? 'image-loading' : 'fade-in'}`}
+            className={`lazy-load ${!isLoading ? 'fade-in' : ''}`}
             key={currentIndex}
-            style={{ opacity: isLoading ? 0 : 1 }} // Adjust the initial opacity if needed
           />
         </div>
       )}
