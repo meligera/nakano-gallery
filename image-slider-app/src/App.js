@@ -117,7 +117,7 @@ function App() {
         <h2>Quintessential Quintuplets Gallery</h2>
         <div>
           {characters.map(character => (
-            <button key={character} onClick={() => handleCharacterChange(character)} style={{marginRight: '5px'}}>
+            <button key={character} onClick={() => handleCharacterChange(character)} style={{marginRight: '10px'}}>
               {character}
             </button>
           ))}
