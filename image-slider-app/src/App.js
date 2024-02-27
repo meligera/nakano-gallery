@@ -3,23 +3,24 @@ import axios from 'axios';
 import './App.css';
 
 function App() {
-  const [character, setCharacter] = useState('Ichika'); // Default character
+  const [characters] = useState(['Ichika', 'Nino', 'Miku', 'Yotsuba', 'Itsuki', 'Together']); // Added characters array
+  const [selectedCharacter, setSelectedCharacter] = useState('Ichika'); // Default selected character
   const [images, setImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const imageRef = useRef(null);
 
-  // Fetch the list of images from the server for a given character
+  // Fetch the list of images from the server for the selected character
   useEffect(() => {
-    setIsLoading(true);
-    axios.get(`http://62.109.18.217:5000/images/${character}/list`)
+    setIsLoading(true); // Show loader while fetching
+    axios.get(`http://62.109.18.217:5000/images/${selectedCharacter}/list`)
       .then(response => {
         setImages(response.data);
-        setCurrentIndex(0); // Start from the first image of the new character
+        setCurrentIndex(Math.floor(Math.random() * response.data.length));
+        setIsLoading(false); // Hide loader after fetching
       })
-      .catch(error => console.error("There was an error fetching the images: ", error))
-      .finally(() => setIsLoading(false));
-  }, [character]);
+      .catch(error => console.error("There was an error fetching the images: ", error));
+  }, [selectedCharacter]); // Dependency array now includes selectedCharacter
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -51,29 +52,25 @@ function App() {
     };
   }, [currentIndex, images]);
  
-  useEffect(() => {
-    setIsLoading(true); // Reset loading state on currentIndex change
-  }, [currentIndex]);
+  
+  const handleCharacterChange = (character) => {
+    setSelectedCharacter(character); // Update the selected character which triggers the useEffect to fetch images
+  };
 
   // Function to navigate to the next image
   const nextImage = () => {
-    setCurrentIndex((currentIndex + 1) % images[currentCharacter].length);
+    setCurrentIndex((currentIndex + 1) % images.length);
   };
 
   // Function to navigate to the previous image
   const prevImage = () => {
-    setCurrentIndex((currentIndex - 1 + images[currentCharacter].length) % images[currentCharacter].length);
+    setCurrentIndex((currentIndex - 1 + images.length) % images.length);
   };
 
   // Function to show a random image
   const randomImage = () => {
     setCurrentIndex(Math.floor(Math.random() * images.length));
   };
-
-    // Function to change character
-    const changeCharacter = (newCharacter) => {
-      setCharacter(newCharacter);
-    };
 
   const downloadCurrentImage = () => {
     const imageSrc = `http://62.109.18.217:5000${images[currentIndex]}`;
@@ -93,6 +90,8 @@ function App() {
       })
       .catch(err => console.error("Error in downloading the file", err));
   };
+  
+  
 
   useEffect(() => {
     function handleKeyPress(e) {
@@ -109,44 +108,40 @@ function App() {
   }, [nextImage, prevImage, randomImage]); // Include randomImage in the dependency array
   
     const onLoad = () => {
-    setTimeout(() => setIsLoading(false), 250); // Adjust the delay here as needed
+    setIsLoading(false); // Set loading to false when the image is loaded
   };
-
 
   return (
     <div className="App">
       <header className="App-header">
-        <h2>Quintessential Quintuplets Gallery - {character}</h2>
-        <div className="character-selector">
-          {['Ichika', 'Nino', 'Miku', 'Yotsuba', 'Itsuki', 'Together'].map((char) => (
-            <button key={char} onClick={() => changeCharacter(char)} disabled={character === char}>
-              {char}
+        <h2>Quintessential Quintuplets Gallery</h2>
+        <div>
+          {characters.map(character => (
+            <button key={character} onClick={() => handleCharacterChange(character)} style={{marginRight: '5px'}}>
+              {character}
             </button>
           ))}
         </div>
         <span className='image-counter'>
           Image {currentIndex + 1} of {images.length}
         </span>
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          images.length > 0 && (
-            <div className="image-wrapper">
-              <img 
-                ref={imageRef}
-                src={`http://62.109.18.217:5000${images[currentIndex]}`} 
-                alt={`${character}`}
-                onLoad={() => setIsLoading(false)}
-                className={`lazy-load ${!isLoading ? 'fade-in' : ''}`}
-                key={currentIndex}
-              />
-            </div>
-          )
-        )}
+        {images.length > 0 && (
+        <div className="image-wrapper">
+          <img 
+            ref={imageRef}
+            data-src={`http://62.109.18.217:5000${images[currentIndex]}`} 
+            alt="Girls"
+            onLoad={onLoad}
+            className={`lazy-load ${isLoading ? 'image-loading' : 'fade-in'}`}
+            key={currentIndex}
+            style={{ opacity: isLoading ? 0 : 1 }} // Adjust the initial opacity if needed
+          />
+        </div>
+      )}
         <div className="carousel-controls">
-          <button onClick={() => setCurrentIndex((currentIndex - 1 + images.length) % images.length)}>Previous</button>
-          <button onClick={() => setCurrentIndex(Math.floor(Math.random() * images.length))}>Random</button>
-          <button onClick={() => setCurrentIndex((currentIndex + 1) % images.length)}>Next </button>
+          <button onClick={prevImage}>Previous</button>
+          <button onClick={randomImage}>Random</button>
+          <button onClick={nextImage}>Next </button>
         </div>
         <button onClick={downloadCurrentImage} style={{ marginTop: '10px' }}>Download Current Image</button>
       </header>
