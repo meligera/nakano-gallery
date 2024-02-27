@@ -8,6 +8,7 @@ My little app on React showcasing my wallpaper collection from anime The Quintes
 
 TO-DO:
 
-- [ ] Distribute images in backend (Ichika, Nino, Miku, Yotsuba, Itsuki, All)
+- [x] Distribute images in backend (Ichika, Nino, Miku, Yotsuba, Itsuki, All)
 - [ ] Add slider to the images
 - [x] Button to download the current image 
+- [ ] Add image preloading for smooth experience
