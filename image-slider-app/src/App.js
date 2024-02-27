@@ -162,6 +162,8 @@ function App() {
           <button onClick={nextCharacter}>Next Character</button>
         </div>
         <button onClick={downloadCurrentImage} style={{ marginTop: '10px' }}>Download Current Image</button>
+        </>
+        )}
       </header>
     </div>
   );
