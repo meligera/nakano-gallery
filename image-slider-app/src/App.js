@@ -3,20 +3,30 @@ import axios from 'axios';
 import './App.css';
 
 function App() {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState({});
+  const [currentCharacter, setCurrentCharacter] = useState('Ichika');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const imageRef = useRef(null);
+  const characters = ['Ichika', 'Nino', 'Miku', 'Yotsuba', 'Itsuki', 'Together'];
 
-  // Fetch the list of images from the server
+  // Fetch the list of images for each character from the server
   useEffect(() => {
-    axios.get('http://62.109.18.217:5000/images/list')
-      .then(response => {
-        setImages(response.data);
-        // Initialize with a random image
-        setCurrentIndex(Math.floor(Math.random() * response.data.length));
-      })
-      .catch(error => console.error("There was an error fetching the images: ", error));
+    const fetchImages = async () => {
+      const allImages = {};
+      for (const character of characters) {
+        try {
+          const response = await axios.get(`http://62.109.18.217:5000/images/${character}/list`);
+          allImages[character] = response.data;
+        } catch (error) {
+          console.error(`There was an error fetching the images for ${character}: `, error);
+        }
+      }
+      setImages(allImages);
+      setIsLoading(false);
+    };
+    
+    fetchImages();
   }, []);
 
   useEffect(() => {
@@ -55,18 +65,34 @@ function App() {
 
   // Function to navigate to the next image
   const nextImage = () => {
-    setCurrentIndex((currentIndex + 1) % images.length);
+    setCurrentIndex((currentIndex + 1) % images[currentCharacter].length);
   };
 
   // Function to navigate to the previous image
   const prevImage = () => {
-    setCurrentIndex((currentIndex - 1 + images.length) % images.length);
+    setCurrentIndex((currentIndex - 1 + images[currentCharacter].length) % images[currentCharacter].length);
   };
 
   // Function to show a random image
   const randomImage = () => {
     setCurrentIndex(Math.floor(Math.random() * images.length));
   };
+
+    // Function to navigate to the next character
+    const nextCharacter = () => {
+      const currentIdx = characters.indexOf(currentCharacter);
+      const nextIdx = (currentIdx + 1) % characters.length;
+      setCurrentCharacter(characters[nextIdx]);
+      setCurrentIndex(0); // Reset index for new character
+    };
+  
+    // Function to navigate to the previous character
+    const prevCharacter = () => {
+      const currentIdx = characters.indexOf(currentCharacter);
+      const prevIdx = (currentIdx - 1 + characters.length) % characters.length;
+      setCurrentCharacter(characters[prevIdx]);
+      setCurrentIndex(0); // Reset index for new character
+    };
 
   const downloadCurrentImage = () => {
     const imageSrc = `http://62.109.18.217:5000${images[currentIndex]}`;
@@ -108,27 +134,32 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h2>Quintessential Quintuplets Gallery</h2>
-        <span className='image-counter'>
-          Image {currentIndex + 1} of {images.length}
-        </span>
-        {images.length > 0 && (
-        <div className="image-wrapper">
-          <img 
-            ref={imageRef}
-            src={isLoading ? undefined : `http://62.109.18.217:5000${images[currentIndex]}`} 
-            data-src={`http://62.109.18.217:5000${images[currentIndex]}`} 
-            alt="Girls"
-            onLoad={onLoad}
-            className={`lazy-load ${!isLoading ? 'fade-in' : ''}`}
-            key={currentIndex}
-          />
-        </div>
-      )}
+      <h2>Quintessential Quintuplets Gallery</h2>
+        {isLoading ? (
+          <p>Loading images...</p>
+        ) : (
+          <>
+          <span className='image-counter'>
+          {currentCharacter} - Image {currentIndex + 1} of {images[currentCharacter].length}
+          </span>
+        {images[currentCharacter].length > 0 && (
+              <div className="image-wrapper">
+                <img 
+                  ref={imageRef}
+                  src={`http://62.109.18.217:5000${images[currentCharacter][currentIndex]}`} 
+                  alt={`${currentCharacter}`}
+                  onLoad={() => setIsLoading(false)}
+                  className='fade-in'
+                  key={`${currentCharacter}-${currentIndex}`}
+                />
+              </div>
+            )}
         <div className="carousel-controls">
+        <button onClick={prevCharacter}>Prev Character</button>
           <button onClick={prevImage}>Previous</button>
           <button onClick={randomImage}>Random</button>
           <button onClick={nextImage}>Next </button>
+          <button onClick={nextCharacter}>Next Character</button>
         </div>
         <button onClick={downloadCurrentImage} style={{ marginTop: '10px' }}>Download Current Image</button>
       </header>
