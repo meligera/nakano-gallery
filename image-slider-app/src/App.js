@@ -83,36 +83,38 @@ function App() {
   return (
     <div className="App bg-gray-800 text-white w-full min-h-screen flex flex-col items-center justify-start pt-4">
       <header className="flex flex-col items-center justify-center w-full px-4 text-center">
-        <h2 className="text-2xl mb-4">Quintessential Quintuplets Gallery</h2>
-        <div className="flex flex-wrap justify-center items-center gap-2 mb-4">
-          {characters.map(character => (
-            <button 
-              key={character} 
-              onClick={() => handleCharacterChange(character)} 
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm"
-            >
-              {character}
-            </button>
-          ))}
+        <h2 className="text-2xl mb-2">Quintessential Quintuplets Gallery</h2>
+        <div className="flex flex-wrap justify-center items-center gap-2 mb-2">
+        {characters.map(character => (
+        <button 
+          key={character} 
+          onClick={() => handleCharacterChange(character)} 
+          className={`${
+            selectedCharacter === character ? "bg-green-500" : "bg-blue-500"
+          } hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm`}
+        >
+          {character}
+        </button>
+         ))}
         </div>
         <span className="image-counter text-sm mb-2 font-style: italic">
           Image {currentIndex + 1} of {images.length}
         </span>
         {images.length > 0 && (
-          <div className="image-wrapper flex justify-center items-center mb-4 w-full">
+          <div className="image-wrapper flex justify-center items-center mb-2 w-full">
             <img 
               src={`http://192.168.88.119:5000${images[currentIndex]}`} 
               alt="Girls"
               onLoad={onLoad}
-              className={`max-w-full max-h-[60vh] md:max-h-[75vh] object-contain transition-opacity duration-500 ease-in-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+              className={`max-w-full max-h-[60vh] md:max-h-[76vh] object-contain transition-opacity duration-500 ease-in-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}
               key={currentIndex}
             />
           </div>
         )}
-        <div className="carousel-controls flex justify-center items-center gap-4 mb-4">
-          <button onClick={prevImage} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm">⤎Previous</button>
+        <div className="carousel-controls flex justify-center items-center gap-4 mb-4 mt-2">
+          <button onClick={prevImage} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm">⤎ Prev</button>
           <button onClick={randomImage} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm">Random (R)</button>
-          <button onClick={nextImage} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm">Next⤏</button>
+          <button onClick={nextImage} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm">Next ⤏</button>
         </div>
         <button onClick={downloadCurrentImage} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm">Download Current Image (D)</button>
       </header>
