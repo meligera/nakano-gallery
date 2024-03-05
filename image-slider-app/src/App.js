@@ -106,7 +106,7 @@ function App() {
               src={`http://192.168.88.119:5000${images[currentIndex]}`} 
               alt="Girls"
               onLoad={onLoad}
-              className={`max-w-full max-h-[60vh] md:max-h-[76vh] object-contain transition-opacity duration-500 ease-in-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+              className={`max-w-full max-h-[60vh] md:max-h-[74vh] object-contain transition-opacity duration-500 ease-in-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}
               key={currentIndex}
             />
           </div>
