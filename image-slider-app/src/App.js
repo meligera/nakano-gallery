@@ -19,7 +19,7 @@ function App() {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`http://192.168.77.240:5000/images/${selectedCharacter}/list`)
+      .get(`http://localhost:5000/images/${selectedCharacter}/list`)
       .then((response) => {
         setImages(response.data);
         setCurrentIndex(Math.floor(Math.random() * response.data.length));
@@ -47,7 +47,7 @@ function App() {
   };
 
   const downloadCurrentImage = () => {
-    const imageSrc = `http://192.168.77.240:5000${images[currentIndex]}`;
+    const imageSrc = `http://localhost:5000${images[currentIndex]}`;
     fetch(imageSrc)
       .then((response) => response.blob())
       .then((blob) => {
@@ -68,7 +68,7 @@ function App() {
   const downloadCurrentCharacterImages = () => {
     const zip = new JSZip();
     const promises = images.map((image, index) => {
-      const imageUrl = `http://192.168.77.240:5000${image}`;
+      const imageUrl = `http://localhost:5000${image}`;
       return fetch(imageUrl)
         .then((response) => response.blob())
         .then((blob) => {
@@ -94,11 +94,11 @@ function App() {
     const zip = new JSZip();
     const promises = characters.map((character) =>
       axios
-        .get(`http://192.168.77.240:5000/images/${character}/list`)
+        .get(`http://localhost:5000/images/${character}/list`)
         .then((response) => {
           const characterImages = response.data.map(
             (image, index) =>
-              fetch(`http://192.168.77.240:5000${image}`)
+              fetch(`http://localhost:5000${image}`)
                 .then((response) => response.blob())
                 .then((blob) => {
                   zip.file(`${character}_image_${index + 1}.jpg`, blob);
@@ -166,7 +166,7 @@ function App() {
         {images.length > 0 && (
           <div className="image-wrapper flex justify-center items-center mb-2 w-full">
             <img
-              src={`http://192.168.77.240:5000${images[currentIndex]}`}
+              src={`http://localhost:5000${images[currentIndex]}`}
               alt="Girls"
               onLoad={onLoad}
               className={`max-w-full max-h-[60vh] md:max-h-[74vh] object-contain transition-all duration-500 ease-in-out ${
