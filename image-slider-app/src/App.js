@@ -19,7 +19,7 @@ function App() {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`http://localhost:5000/images/${selectedCharacter}/list`)
+      .get(`https://nakanoimages.misatolab.ru/images/${selectedCharacter}/list`)
       .then((response) => {
         setImages(response.data);
         setCurrentIndex(Math.floor(Math.random() * response.data.length));
@@ -47,7 +47,7 @@ function App() {
   };
 
   const downloadCurrentImage = () => {
-    const imageSrc = `http://localhost:5000${images[currentIndex]}`;
+    const imageSrc = `https://nakanoimages.misatolab.ru${images[currentIndex]}`;
     fetch(imageSrc)
       .then((response) => response.blob())
       .then((blob) => {
@@ -68,7 +68,7 @@ function App() {
   const downloadCurrentCharacterImages = () => {
     const zip = new JSZip();
     const promises = images.map((image, index) => {
-      const imageUrl = `http://localhost:5000${image}`;
+      const imageUrl = `https://nakanoimages.misatolab.ru${image}`;
       return fetch(imageUrl)
         .then((response) => response.blob())
         .then((blob) => {
@@ -94,11 +94,11 @@ function App() {
     const zip = new JSZip();
     const promises = characters.map((character) =>
       axios
-        .get(`http://localhost:5000/images/${character}/list`)
+        .get(`https://nakanoimages.misatolab.ru/images/${character}/list`)
         .then((response) => {
           const characterImages = response.data.map(
             (image, index) =>
-              fetch(`http://localhost:5000${image}`)
+              fetch(`https://nakanoimages.misatolab.ru${image}`)
                 .then((response) => response.blob())
                 .then((blob) => {
                   zip.file(`${character}_image_${index + 1}.jpg`, blob);
@@ -166,7 +166,7 @@ function App() {
         {images.length > 0 && (
           <div className="image-wrapper flex justify-center items-center mb-2 w-full">
             <img
-              src={`http://localhost:5000${images[currentIndex]}`}
+              src={`https://nakanoimages.misatolab.ru${images[currentIndex]}`}
               alt="Girls"
               onLoad={onLoad}
               className={`max-w-full max-h-[60vh] md:max-h-[74vh] object-contain transition-all duration-500 ease-in-out ${
@@ -176,7 +176,7 @@ function App() {
             />
           </div>
         )}
-        <div className="carousel-controls flex justify-center items-center gap-4 mb-4 mt-2">
+        <div className="carousel-controls flex justify-center items-center gap-4 mb-2 sm:mb-4 mt-2">
           <button
             onClick={prevImage}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm"
@@ -196,29 +196,28 @@ function App() {
             Next ⤏
           </button>
         </div>
-        <div className="download-buttons absolute top-4 right-4">
-          <button
-            onClick={downloadCurrentImage}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm"
-          >
-            Download Current Image (D)
-          </button>
-          <button
-            onClick={downloadCurrentCharacterImages}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm ml-2"
-          >
-            Download Current Character Images
-          </button>
-          <button
-            onClick={downloadAllImages}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm ml-2"
-          >
-            Download All Images
-          </button>
-        </div>
       </header>
+      <div className="download-buttons flex flex-col sm:flex-row items-center justify-center gap-2 mt-auto p-4">
+        <button
+          onClick={downloadCurrentImage}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm"
+        >
+          Download Current Image (D)
+        </button>
+        <button
+          onClick={downloadCurrentCharacterImages}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm"
+        >
+          Download Current Character Images
+        </button>
+        <button
+          onClick={downloadAllImages}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm"
+        >
+          Download All Images
+        </button>
+      </div>
     </div>
   );
 }
-
 export default App;
