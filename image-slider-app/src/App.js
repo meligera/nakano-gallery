@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import JSZip from 'jszip';
+import JSZip from "jszip";
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css";
+import path from 'path-browserify';
 
 function App() {
   const [characters] = useState([
@@ -13,37 +16,31 @@ function App() {
   ]);
   const [selectedCharacter, setSelectedCharacter] = useState("Ichika");
   const [images, setImages] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [imageItems, setImageItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     setIsLoading(true);
     axios
       .get(`https://nakanoimages.misatolab.ru/images/${selectedCharacter}/list`)
       .then((response) => {
-        setImages(response.data);
-        setCurrentIndex(Math.floor(Math.random() * response.data.length));
+        const imageUrls = response.data;
+        setImages(imageUrls);
+        const items = imageUrls.map((imageUrl) => ({
+          thumbnail: `https://nakanoimages.misatolab.ru/images/${selectedCharacter}/thumbnail/${path.basename(imageUrl)}`,
+          original: `https://nakanoimages.misatolab.ru${imageUrl}`,
+        }));
+        setImageItems(items);
         setIsLoading(false);
       })
       .catch((error) =>
-        console.error("There was an error fetching the images: ", error)
+        console.error('There was an error fetching the images: ', error)
       );
   }, [selectedCharacter]);
 
   const handleCharacterChange = (character) => {
     setSelectedCharacter(character);
-  };
-
-  const nextImage = () => {
-    setCurrentIndex((currentIndex + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentIndex((currentIndex - 1 + images.length) % images.length);
-  };
-
-  const randomImage = () => {
-    setCurrentIndex(Math.floor(Math.random() * images.length));
   };
 
   const downloadCurrentImage = () => {
@@ -122,27 +119,6 @@ function App() {
     });
   };
 
-  useEffect(() => {
-    function handleKeyPress(e) {
-      if (e.key === "ArrowRight") {
-        nextImage();
-      } else if (e.key === "ArrowLeft") {
-        prevImage();
-      } else if (e.key.toLowerCase() === "r") {
-        randomImage();
-      } else if (e.key.toLowerCase() === "d") {
-        downloadCurrentImage();
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [nextImage, prevImage, randomImage]);
-
-  const onLoad = () => {
-    setIsLoading(false);
-  };
-
   return (
     <div className="App bg-gray-800 text-white w-full min-h-screen flex flex-col items-center justify-start pt-4">
       <header className="flex flex-col items-center justify-center w-full px-4 text-center">
@@ -160,49 +136,30 @@ function App() {
             </button>
           ))}
         </div>
-        <span className="image-counter text-sm mb-2 font-style: italic">
-          Image {currentIndex + 1} of {images.length}
-        </span>
-        {images.length > 0 && (
-          <div className="image-wrapper flex justify-center items-center mb-2 w-full">
-            <img
-              src={`https://nakanoimages.misatolab.ru${images[currentIndex]}`}
-              alt="Girls"
-              onLoad={onLoad}
-              className={`max-w-full max-h-[60vh] md:max-h-[74vh] object-contain transition-all duration-500 ease-in-out ${
-                isLoading ? "opacity-0" : "opacity-100"
-              }`}
-              key={currentIndex}
-            />
-          </div>
-        )}
-        <div className="carousel-controls flex justify-center items-center gap-4 mb-2 sm:mb-4 mt-2">
-          <button
-            onClick={prevImage}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm"
-          >
-            ⤎ Prev
-          </button>
-          <button
-            onClick={randomImage}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm"
-          >
-            Random (R)
-          </button>
-          <button
-            onClick={nextImage}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm"
-          >
-            Next ⤏
-          </button>
-        </div>
       </header>
+      <div className="gallery-wrapper flex justify-center items-center mb-2 w-full flex-grow p-4">
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <ImageGallery
+            items={imageItems}
+            showThumbnails={true}
+            thumbnailPosition="left"
+            showPlayButton={true}
+            showFullscreenButton={true}
+            disableThumbnailScroll={false}
+            showIndex={true}
+            lazyLoad={true}
+            onSlide={(currentIndex) => setCurrentIndex(currentIndex)}
+          />
+        )}
+      </div>
       <div className="download-buttons flex flex-col sm:flex-row items-center justify-center gap-2 mt-auto p-4">
         <button
           onClick={downloadCurrentImage}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm"
         >
-          Download Current Image (D)
+          Download Current Image
         </button>
         <button
           onClick={downloadCurrentCharacterImages}
