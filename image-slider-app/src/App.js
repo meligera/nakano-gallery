@@ -120,24 +120,26 @@ function App() {
   };
 
   return (
-    <div className="App bg-gray-800 text-white w-full min-h-screen flex flex-col items-center justify-start pt-4">
-      <header className="flex flex-col items-center justify-center w-full px-4 text-center">
-        <h2 className="text-2xl mb-2">Quintessential Quintuplets Gallery</h2>
-        <div className="flex flex-wrap justify-center items-center gap-2 mb-2">
+    <div className="App bg-[#343541] text-gray-200 w-full min-h-screen flex flex-col items-center justify-start pt-6 transition-colors duration-500">
+      <header className="flex flex-col items-center justify-center w-full px-4 text-center mb-4">
+        <h2 className="text-2xl font-semibold mb-3">Quintessential Quintuplets Gallery</h2>
+        <div className="flex flex-wrap justify-center items-center gap-2">
           {characters.map((character) => (
             <button
               key={character}
               onClick={() => handleCharacterChange(character)}
-              className={`${
-                selectedCharacter === character ? "bg-green-500" : "bg-blue-500"
-              } hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm`}
+              className={`px-4 py-1 rounded-md text-sm font-medium transition-colors duration-300 ${
+                selectedCharacter === character
+                  ? 'bg-green-600'
+                  : 'bg-[#444654] hover:bg-[#565869]'
+              }`}
             >
               {character}
             </button>
           ))}
         </div>
       </header>
-      <div className="gallery-wrapper flex justify-center items-center mb-2 w-full flex-grow p-4">
+      <div className="gallery-wrapper flex justify-center items-center mb-4 w-full flex-grow p-4">
         {isLoading ? (
           <p>Loading...</p>
         ) : (
@@ -157,19 +159,19 @@ function App() {
       <div className="download-buttons flex flex-col sm:flex-row items-center justify-center gap-2 mt-auto p-4">
         <button
           onClick={downloadCurrentImage}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm"
+          className="px-4 py-1 rounded-md text-sm font-medium bg-[#444654] hover:bg-[#565869] transition-colors duration-300"
         >
           Download Current Image
         </button>
         <button
           onClick={downloadCurrentCharacterImages}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm"
+          className="px-4 py-1 rounded-md text-sm font-medium bg-[#444654] hover:bg-[#565869] transition-colors duration-300"
         >
           Download Current Character Images
         </button>
         <button
           onClick={downloadAllImages}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded text-sm"
+          className="px-4 py-1 rounded-md text-sm font-medium bg-[#444654] hover:bg-[#565869] transition-colors duration-300"
         >
           Download All Images
         </button>
@@ -178,3 +180,4 @@ function App() {
   );
 }
 export default App;
+
