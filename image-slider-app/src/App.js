@@ -4,7 +4,7 @@ import JSZip from "jszip";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import path from 'path-browserify';
-import { motion } from '@motionone/react';
+import { motion } from 'motion';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 
