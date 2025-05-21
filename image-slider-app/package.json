@@ -19,7 +19,7 @@
     "@mui/icons-material": "^5.15.0",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
-    "@motionone/react": "^1.0.0"
+    "@motionone/react": "^10.16.0"
   },
   "scripts": {
     "start": "react-scripts start",
