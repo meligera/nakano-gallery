@@ -4,6 +4,9 @@ import JSZip from "jszip";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import path from 'path-browserify';
+import { motion } from '@motionone/react';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 
 function App() {
   const [characters] = useState([
@@ -135,12 +138,14 @@ function App() {
   return (
     <div className="App bg-white dark:bg-[#343541] text-gray-900 dark:text-gray-200 w-full h-screen overflow-hidden flex flex-col items-center justify-start pt-6 transition-colors duration-500">
       <header className="flex flex-col items-center justify-center w-full px-4 text-center mb-4 relative">
-        <button
+        <motion.button
           onClick={() => setDarkMode((prev) => !prev)}
-          className={`absolute top-0 right-0 p-2 text-xl transition-transform duration-500 ${darkMode ? 'rotate-180' : ''}`}
+          className="absolute top-0 right-0 p-2 text-xl"
+          animate={{ rotate: darkMode ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
         >
-          {darkMode ? '🌙' : '☀️'}
-        </button>
+          {darkMode ? <DarkModeIcon /> : <LightModeIcon />}
+        </motion.button>
         <h2 className="text-2xl font-semibold mb-3">Quintessential Quintuplets Gallery</h2>
         <div className="flex flex-wrap justify-center items-center gap-2">
           {characters.map((character) => (
