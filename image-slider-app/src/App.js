@@ -19,6 +19,15 @@ function App() {
   const [imageItems, setImageItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [darkMode, setDarkMode] = useState(true);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   const renderLazyThumbnail = (item) => (
     <img src={item.thumbnail} alt="" loading="lazy" />
@@ -124,8 +133,14 @@ function App() {
   };
 
   return (
-    <div className="App bg-[#343541] text-gray-200 w-full min-h-screen flex flex-col items-center justify-start pt-6 transition-colors duration-500">
-      <header className="flex flex-col items-center justify-center w-full px-4 text-center mb-4">
+    <div className="App bg-white dark:bg-[#343541] text-gray-900 dark:text-gray-200 w-full h-screen overflow-hidden flex flex-col items-center justify-start pt-6 transition-colors duration-500">
+      <header className="flex flex-col items-center justify-center w-full px-4 text-center mb-4 relative">
+        <button
+          onClick={() => setDarkMode((prev) => !prev)}
+          className={`absolute top-0 right-0 p-2 text-xl transition-transform duration-500 ${darkMode ? 'rotate-180' : ''}`}
+        >
+          {darkMode ? '🌙' : '☀️'}
+        </button>
         <h2 className="text-2xl font-semibold mb-3">Quintessential Quintuplets Gallery</h2>
         <div className="flex flex-wrap justify-center items-center gap-2">
           {characters.map((character) => (
@@ -134,8 +149,8 @@ function App() {
               onClick={() => handleCharacterChange(character)}
               className={`px-4 py-1 rounded-md text-sm font-medium transition-colors duration-300 ${
                 selectedCharacter === character
-                  ? 'bg-green-600'
-                  : 'bg-[#444654] hover:bg-[#565869]'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-gray-200 dark:bg-[#444654] hover:bg-gray-300 dark:hover:bg-[#565869]'
               }`}
             >
               {character}
@@ -143,7 +158,7 @@ function App() {
           ))}
         </div>
       </header>
-      <div className="gallery-wrapper flex justify-center items-center mb-4 w-full flex-grow p-4">
+      <div className="gallery-wrapper flex justify-center items-center mb-4 w-full flex-grow p-4 overflow-hidden">
         {isLoading ? (
           <p>Loading...</p>
         ) : (
@@ -164,19 +179,19 @@ function App() {
       <div className="download-buttons flex flex-col sm:flex-row items-center justify-center gap-2 mt-auto p-4">
         <button
           onClick={downloadCurrentImage}
-          className="px-4 py-1 rounded-md text-sm font-medium bg-[#444654] hover:bg-[#565869] transition-colors duration-300"
+          className="px-4 py-1 rounded-md text-sm font-medium bg-gray-200 dark:bg-[#444654] hover:bg-gray-300 dark:hover:bg-[#565869] transition-colors duration-300"
         >
           Download Current Image
         </button>
         <button
           onClick={downloadCurrentCharacterImages}
-          className="px-4 py-1 rounded-md text-sm font-medium bg-[#444654] hover:bg-[#565869] transition-colors duration-300"
+          className="px-4 py-1 rounded-md text-sm font-medium bg-gray-200 dark:bg-[#444654] hover:bg-gray-300 dark:hover:bg-[#565869] transition-colors duration-300"
         >
           Download Current Character Images
         </button>
         <button
           onClick={downloadAllImages}
-          className="px-4 py-1 rounded-md text-sm font-medium bg-[#444654] hover:bg-[#565869] transition-colors duration-300"
+          className="px-4 py-1 rounded-md text-sm font-medium bg-gray-200 dark:bg-[#444654] hover:bg-gray-300 dark:hover:bg-[#565869] transition-colors duration-300"
         >
           Download All Images
         </button>
