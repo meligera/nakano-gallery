@@ -20,6 +20,10 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const renderLazyThumbnail = (item) => (
+    <img src={item.thumbnail} alt="" loading="lazy" />
+  );
+
   useEffect(() => {
     setIsLoading(true);
     axios
@@ -152,6 +156,7 @@ function App() {
             disableThumbnailScroll={false}
             showIndex={true}
             lazyLoad={true}
+            renderThumbInner={renderLazyThumbnail}
             onSlide={(currentIndex) => setCurrentIndex(currentIndex)}
           />
         )}
