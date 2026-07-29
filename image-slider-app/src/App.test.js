@@ -1,8 +1,15 @@
 import { render, screen } from '@testing-library/react';
+import axios from 'axios';
 import App from './App';
 
-test('renders learn react link', () => {
+jest.mock('axios', () => ({
+  get: jest.fn(),
+}));
+
+test('renders the immersive gallery controls', () => {
+  axios.get.mockReturnValue(new Promise(() => {}));
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByText(/quintessential gallery/i)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /fullscreen/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /miku/i })).toBeInTheDocument();
 });
