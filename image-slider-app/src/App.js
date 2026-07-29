@@ -3,10 +3,24 @@ import axios from "axios";
 import JSZip from "jszip";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
-import path from 'path-browserify';
 import { motion } from 'motion/react';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+
+const GITHUB_IMAGE_API =
+  "https://api.github.com/repos/meligera/nakano-gallery/contents/images";
+
+const listCharacterImages = (character) =>
+  axios
+    .get(`${GITHUB_IMAGE_API}/${character}?ref=main`)
+    .then((response) =>
+      response.data
+        .filter(
+          (item) =>
+            item.type === "file" && /\.(jpe?g|png|webp)$/i.test(item.name)
+        )
+        .map((item) => item.download_url)
+    );
 
 function App() {
   const [characters] = useState([
@@ -38,14 +52,12 @@ function App() {
 
   useEffect(() => {
     setIsLoading(true);
-    axios
-      .get(`https://nakanoimages.misatolab.ru/images/${selectedCharacter}/list`)
-      .then((response) => {
-        const imageUrls = response.data;
+    listCharacterImages(selectedCharacter)
+      .then((imageUrls) => {
         setImages(imageUrls);
         const items = imageUrls.map((imageUrl) => ({
-          thumbnail: `https://nakanoimages.misatolab.ru/images/${selectedCharacter}/thumbnail/${path.basename(imageUrl)}`,
-          original: `https://nakanoimages.misatolab.ru${imageUrl}`,
+          thumbnail: imageUrl,
+          original: imageUrl,
         }));
         setImageItems(items);
         setIsLoading(false);
@@ -60,7 +72,7 @@ function App() {
   };
 
   const downloadCurrentImage = () => {
-    const imageSrc = `https://nakanoimages.misatolab.ru${images[currentIndex]}`;
+    const imageSrc = images[currentIndex];
     fetch(imageSrc)
       .then((response) => response.blob())
       .then((blob) => {
@@ -81,7 +93,7 @@ function App() {
   const downloadCurrentCharacterImages = () => {
     const zip = new JSZip();
     const promises = images.map((image, index) => {
-      const imageUrl = `https://nakanoimages.misatolab.ru${image}`;
+      const imageUrl = image;
       return fetch(imageUrl)
         .then((response) => response.blob())
         .then((blob) => {
@@ -106,12 +118,10 @@ function App() {
   const downloadAllImages = () => {
     const zip = new JSZip();
     const promises = characters.map((character) =>
-      axios
-        .get(`https://nakanoimages.misatolab.ru/images/${character}/list`)
-        .then((response) => {
-          const characterImages = response.data.map(
+      listCharacterImages(character).then((imageUrls) => {
+          const characterImages = imageUrls.map(
             (image, index) =>
-              fetch(`https://nakanoimages.misatolab.ru${image}`)
+              fetch(image)
                 .then((response) => response.blob())
                 .then((blob) => {
                   zip.file(`${character}_image_${index + 1}.jpg`, blob);
